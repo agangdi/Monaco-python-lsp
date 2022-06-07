@@ -8,6 +8,7 @@
     "monaco-editor-core": "^0.14.6",
     "monaco-languageclient": "^0.9.0",
     "normalize-url": "^2.0.1",
+    "query-string": "^7.1.1",
     "reconnecting-websocket": "^3.2.2",
     "request-light": "^0.2.2",
     "vscode-json-languageservice": "^3.1.4",
@@ -30,7 +31,7 @@
     "webpack-merge": "^4.1.2"
   },
   "scripts": {
-    "prepare": "npm run clean && npm run build",
+    "prepare": "npm run clean && npm run build && cp lib/* /Users/justshaw/workspace/edu/webapp/public/python-editor/",
     "compile": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf lib",

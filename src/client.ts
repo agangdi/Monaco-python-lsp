@@ -13,6 +13,8 @@ import {
 const ReconnectingWebSocket = require("reconnecting-websocket")
 
 const normalizeUrl = require("normalize-url")
+const queryString = require('query-string');
+
 
 // register Monaco languages
 monaco.languages.register({
@@ -22,7 +24,13 @@ monaco.languages.register({
 })
 
 // create Monaco editor
-const value = `### coding=utf-8`
+const value = `\n\nprint("Hello world!")\n`
+monaco.editor.defineTheme("aliceblue", {
+  base: 'vs', inherit: false, rules: [],
+  colors: {
+    "editor.background": '#333333'
+  }
+})
 const editor = monaco.editor.create(document.getElementById("container")!, {
   model: monaco.editor.createModel(
     value,
@@ -38,7 +46,9 @@ const editor = monaco.editor.create(document.getElementById("container")!, {
 MonacoServices.install(editor)
 
 // create the web socket
-const url = createUrl("/python")
+const {server}: any = queryString.parse(location.search)
+console.log(location.search, server)
+const url = createUrl(server ? `${server}/python` : "localhost:3001/python")
 const webSocket = createWebSocket(url)
 // listen when the web socket is opened
 listen({
@@ -78,7 +88,7 @@ function createLanguageClient(
 
 function createUrl(path: string): string {
   const protocol = location.protocol === "https:" ? "wss" : "ws"
-  return normalizeUrl(`${protocol}://localhost:3001${location.pathname}${path}`)
+  return normalizeUrl(`${protocol}://${path}`)
 }
 
 function createWebSocket(url: string): WebSocket {
@@ -117,3 +127,10 @@ function initAutoSave() {
 function stopAutoSave() {
   clearInterval()
 }
+
+// @ts-ignore
+function getCode() {
+  return editor.getModel().getValue()
+}
+// @ts-ignore
+window.getCode = getCode
